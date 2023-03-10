@@ -50,7 +50,9 @@ const registerAdmin = asyncHandler(async (req, res) => {
 // @route POST /api/admin/login
 // @access admin
 const authenticate = asyncHandler(async (req,res) => {
+    console.log({req:req.body})
     const { email, password } = req.body
+    console.log({email,password})
 
     //check for admin email
     const admin = await Admin.findOne({ email })
@@ -64,6 +66,7 @@ const authenticate = asyncHandler(async (req,res) => {
             message: 'admin dashboard'
         })
     } else {
+        console.log('came***')
         res.status(400)
         throw new Error('Invalid credentials')
     }

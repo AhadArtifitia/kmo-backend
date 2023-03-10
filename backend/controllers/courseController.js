@@ -29,6 +29,20 @@ const setCourse = asyncHandler(async (req,res) => {
     res.status(200).json(course)
 })
 
+//@desc Get course
+//@route GET /api/admin/course/:id
+//@access private
+const getCourse = asyncHandler(async (req,res) => {
+    const course = await Course.findById(req.params.id)
+
+    if(!course) {
+        res.status(400)
+        throw new Error('Course not found')
+    }
+
+    res.status(200).json(course)
+})
+
 //@desc Update course
 //@route PUT /api/admin/course/:id
 //@access private
@@ -64,6 +78,7 @@ const deleteCourse = asyncHandler(async (req,res) => {
 module.exports = {
     getCourses,
     setCourse,
+    getCourse,
     updateCourse,
     deleteCourse
 }

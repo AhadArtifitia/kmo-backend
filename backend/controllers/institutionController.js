@@ -29,6 +29,20 @@ const setInstitution = asyncHandler(async(req,res) => {
     res.status(200).json(instituition)
 })
 
+// @desc Get single Institution
+// @route GET /api/admin/institution/:id
+// @access private
+const getInstitution = asyncHandler(async (req,res) => {
+    const institution = await Institution.findById(req.params.id)
+
+    if(!institution) {
+        res.status(400)
+        throw new Error('Institution not found')
+    }
+
+    res.status(200).json( institution )
+})
+
 // @desc update Institution
 // @route PUT /api/admin/institution/:id
 // @access private
@@ -65,6 +79,7 @@ const deleteInstitution = asyncHandler(async(req,res) => {
 module.exports = {
     getInstitutions,
     setInstitution,
+    getInstitution,
     updateInstitution,
     deleteInstitution
 }

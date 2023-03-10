@@ -29,6 +29,20 @@ const setDepartment = asyncHandler(async(req,res) => {
     res.status(200).json(department)
 })
 
+// @desc Get single Department
+// @route GET /api/admin/department/:id
+// @access private
+const getDepartment = asyncHandler(async (req,res) => {
+    const department = await Department.findById(req.params.id)
+
+    if(!department) {
+        res.status(400)
+        throw new Error('Department not found')
+    }
+
+    res.status(200).json( department )
+})
+
 // @desc update Department
 // @route PUT /api/admin/department/:id
 // @access private
@@ -64,6 +78,7 @@ const deleteDepartment = asyncHandler(async(req,res) => {
 module.exports = {
     getDepartments,
     setDepartment,
+    getDepartment,
     updateDepartment,
     deleteDepartment
 }

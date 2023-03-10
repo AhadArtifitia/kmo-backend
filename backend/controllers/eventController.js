@@ -31,6 +31,19 @@ const setEvent = asyncHandler(async(req,res) => {
     res.status(200).json(event)
 })
 
+// @desc Get Event
+// @route GET /api/admin/event/:id
+// @access private
+const getEvent = asyncHandler(async (req,res) => {
+    const event = await Event.findById(req.params.id)
+    if(!event) {
+        res.status(400)
+        throw new Error('Event not found')
+    }
+
+    res.status(200).json(event)
+})
+
 // @desc update Event
 // @route PUT /api/admin/event/:id
 // @access private
@@ -66,6 +79,7 @@ const deleteEvent = asyncHandler(async(req,res) => {
 module.exports = {
     getEvents,
     setEvent,
+    getEvent,
     updateEvent,
     deleteEvent
 }

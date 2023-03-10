@@ -30,6 +30,19 @@ const setCareer = asyncHandler(async (req,res) => {
     res.status(200).json(career)
 })
 
+//@desc Get career
+//@route GET /api/admin/career/:id
+//@access private
+const getCareer = asyncHandler(async (req,res) => {
+    const career = await Career.findById(req.params.id)
+    if(!career) {
+        res.status(400)
+        throw new Error('Career not found')
+    }
+
+    res.status(200).json(career)
+})
+
 //@desc Update course
 //@route PUT /api/admin/course/:id
 //@access private
@@ -65,6 +78,7 @@ const deleteCareer = asyncHandler(async (req,res) => {
 module.exports = {
     getCareers,
     setCareer,
+    getCareer,
     updateCareer,
     deleteCareer
 }
