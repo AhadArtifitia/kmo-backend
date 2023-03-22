@@ -3,7 +3,7 @@ const router = express.Router()
 const { getCareers, setCareer, updateCareer, deleteCareer, getCareer } = require('../controllers/careerController')
 const protect = require('../middlewares/authMiddleware')
 
-router.get('/career', protect, getCareers)
+router.get('/career', getCareers)
 
 router.post('/career', protect, setCareer)
 

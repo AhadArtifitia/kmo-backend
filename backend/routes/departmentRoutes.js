@@ -3,7 +3,7 @@ const router = express.Router()
 const { getDepartments, setDepartment, updateDepartment, deleteDepartment, getDepartment } = require('../controllers/departmentController')
 const protect = require('../middlewares/authMiddleware')
 
-router.get('/department', protect, getDepartments)
+router.get('/department', getDepartments)
 
 router.post('/department', protect, setDepartment)
 

@@ -12,10 +12,10 @@ connectDB()
 
 const app = express()
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors())
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
 
 app.use('/api/admin', require('./routes/loginRoutes'))
 app.use('/api/admin', require('./routes/institutionRoutes'))
@@ -24,6 +24,8 @@ app.use('/api/admin', require('./routes/courseRoutes'))
 app.use('/api/admin', require('./routes/careerRoutes'))
 app.use('/api/admin', require('./routes/eventRoutes'))
 app.use('/api/admin', require('./routes/bannerRoutes'))
+
+app.use(require('./routes/contactRoutes'))
 
 app.use(errorHandler)
 

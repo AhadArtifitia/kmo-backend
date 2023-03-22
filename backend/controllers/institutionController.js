@@ -1,6 +1,11 @@
 const asyncHandler = require('express-async-handler')
 const Institution = require('../models/institutionModel')
 
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
+const { uploadFile, getFile } = require('../s3')
+
 // @desc Get Institutions
 // @route GET /api/admin/institution
 // @access private
@@ -16,15 +21,20 @@ const getInstitutions = asyncHandler(async (req,res) => {
 const setInstitution = asyncHandler(async(req,res) => {
     if(!req.body.name) {
         res.status(400)
-        throw new Error('please add all fields')
+        throw new Error('please add name field')
     }
 
+    const file = req.file
+    const result = await uploadFile(file)
     const instituition = await Institution.create({
         name: req.body.name,
         phone: req.body.phone,
         email: req.body.email,
-        location: req.body.location
+        location: req.body.location,
+        imageUrl: result.Location
     })
+
+    await unlinkFile(file.path)
 
     res.status(200).json(instituition)
 })

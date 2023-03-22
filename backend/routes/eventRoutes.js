@@ -3,7 +3,7 @@ const router = express.Router()
 const { getEvents, setEvent, updateEvent, deleteEvent, getEvent } = require('../controllers/eventController')
 const protect = require('../middlewares/authMiddleware')
 
-router.get('/event', protect, getEvents)
+router.get('/event', getEvents)
 
 router.post('/event', protect, setEvent)
 

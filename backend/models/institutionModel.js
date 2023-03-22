@@ -13,6 +13,9 @@ const institutionSchema = mongoose.Schema({
     },
     location: {
         type: String,
+    },
+    imageUrl: {
+        type: String,
     }
 },
 {

@@ -1,41 +1,57 @@
 const asyncHandler = require("express-async-handler");
 const Banner = require('../models/bannerModel')
-const multer = require('multer')
 
-// storage 
-const Storage = multer.diskStorage({
-    destination: 'bannerImages',
-    filename: (req, file, cb) => {
-        cb(null, file.originalname)
-    }
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
+const { uploadFile, getFile } = require('../s3')
+
+//@desc Get banners
+//@route GET /api/admin/banner
+//@access private
+const getBanners = asyncHandler(async (req,res) => {
+    const banners = await Banner.find()
+
+    res.status(200).json(banners)
 })
-
-const upload =  multer({
-    storage: Storage
-}).single('testImages')
 
 //@desc Set banner
 //@route POST /api/admin/banner
 //@access private
-const setBanner =  (req,res) => {
-    upload (req, res, (err) => {
-        if(err) {
-            console.log(err);
-        } else {
-            const banner = new Banner({
-                name: req.body.name,
-                image: {
-                    data: req.file.filename,
-                    contentType: 'image/png'
-                }
-            })
-            banner.save()
-            .then( ()=> res.send("successfully uploaded") )
-            .catch(err => console.log(err))
-        }
+const setBanner = asyncHandler(async(req,res) => {
+
+    const file = req.file
+    const result = await uploadFile(file)
+    const banner = await Banner.create({
+        name: req.body.name,
+        imageUrl: result.Location
     })
-}
+
+    await unlinkFile(file.path)
+
+    res.status(200).json(banner)
+})
+
+//@desc Delete course
+//@route DELETE /api/admin/course/:id
+//@access private
+const deleteBanner = asyncHandler(async (req,res) => {
+    const banner = await Banner.findById(req.params.id)
+
+    if(!banner) {
+        res.status(400)
+        throw new Error('Banner not found')
+    }
+
+    await banner.remove()
+
+    res.status(200).json({ id: req.params.id })
+
+    
+})
 
 module.exports = {
-    setBanner
+    getBanners,
+    setBanner,
+    deleteBanner
 }
