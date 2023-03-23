@@ -3,7 +3,7 @@ mongoose.set("strictQuery", true);
 
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect("mongodb+srv://admin:Admin313@cluster0.la0jefa.mongodb.net/KMO-CMS?retryWrites=true&w=majority")
+        const conn = await mongoose.connect(process.env.MONGO_URI)
         console.log(`MongoDB Connected: ${conn.connection.host}`.cyan.underline);
     } catch (error) {
         console.log(error);
