@@ -5,6 +5,9 @@ const institutionSchema = mongoose.Schema({
         type: String,
         required: [true, 'Please add a name value']
     },
+    description: {
+        type: String,
+    },
     phone: {
         type: String,
     },

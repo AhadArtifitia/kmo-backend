@@ -28,6 +28,7 @@ const setInstitution = asyncHandler(async(req,res) => {
     const result = await uploadFile(file)
     const instituition = await Institution.create({
         name: req.body.name,
+        description: req.body.description,
         phone: req.body.phone,
         email: req.body.email,
         location: req.body.location,
