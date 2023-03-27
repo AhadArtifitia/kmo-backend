@@ -1,6 +1,11 @@
 const asyncHandler = require('express-async-handler')
 const Event = require('../models/eventModel')
 
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
+const { uploadFile, getFile } = require('../s3')
+
 // @desc Get Events
 // @route GET /api/admin/event
 // @access private
@@ -19,14 +24,20 @@ const setEvent = asyncHandler(async(req,res) => {
         throw new Error('please add title field')
     }
 
+    const file = req.file
+    const result = await uploadFile(file)
     const event = await Event.create({
         title: req.body.title,
         organizer: req.body.organizer,
         type: req.body.type,
         category: req.body.category,
+        description: req.body.description,
         location: req.body.location,
         datetime: req.body.datetime,
+        imageUrl: result.Location
     })
+
+    await unlinkFile(file.path)
 
     res.status(200).json(event)
 })

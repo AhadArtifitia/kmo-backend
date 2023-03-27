@@ -14,10 +14,16 @@ const eventSchema = mongoose.Schema({
     category: {
         type: String,
     },
+    description: {
+        type: String,
+    },
     location: {
         type: String,
     },
     datetime: {
+        type: String
+    },
+    imageUrl: {
         type: String
     }
 },
