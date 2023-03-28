@@ -21,6 +21,7 @@ const setCourse = asyncHandler(async (req,res) => {
 
     const course = await Course.create({
         name: req.body.name,
+        level: req.body.level,
         department: req.body.department,
         duration: req.body.duration,
         fees: req.body.fees

@@ -5,6 +5,10 @@ const courseSchema = mongoose.Schema({
         type: String,
         required: [true, 'Please add a name value']
     },
+    level: {
+        type: String,
+        enum: ['hss', 'bachelors', 'masters'],
+    },
     department: {
         type: String,
         required: [true, 'Please add a department value']
