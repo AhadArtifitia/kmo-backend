@@ -24,6 +24,7 @@ app.use('/api/admin', require('./routes/courseRoutes'))
 app.use('/api/admin', require('./routes/careerRoutes'))
 app.use('/api/admin', require('./routes/eventRoutes'))
 app.use('/api/admin', require('./routes/bannerRoutes'))
+app.use('/api/admin', require('./routes/alumniRoutes'))
 
 app.use(require('./routes/contactRoutes'))
 
