@@ -21,6 +21,7 @@ const setDepartment = asyncHandler(async(req,res) => {
 
     const department = await Department.create({
         name: req.body.name,
+        description: req.body.description,
         hod: req.body.hod,
         courses: req.body.courses,
         capacity: req.body.capacity

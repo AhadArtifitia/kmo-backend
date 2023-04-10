@@ -5,6 +5,9 @@ const departmentSchema = mongoose.Schema({
         type: String,
         required: [true, 'Please add a name value']
     },
+    description: {
+        type: String,
+    },
     hod: {
         type: String,
     },
