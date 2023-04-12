@@ -12,7 +12,7 @@ const departmentSchema = mongoose.Schema({
         type: String,
     },
     courses: {
-        type: String,
+        type: [String],
     },
     capacity: {
         type: Number,

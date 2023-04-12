@@ -23,7 +23,7 @@ const setDepartment = asyncHandler(async(req,res) => {
         name: req.body.name,
         description: req.body.description,
         hod: req.body.hod,
-        courses: req.body.courses,
+        courses: req.body.courses.split(','),
         capacity: req.body.capacity
     })
 
