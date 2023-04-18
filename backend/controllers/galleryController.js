@@ -1,10 +1,15 @@
 const asyncHandler = require('express-async-handler')
 const Gallery = require('../models/galleryModel')
 
+require('dotenv').config()
+
+const bucketName = process.env.AWS_BUCKET_NAME
+const region = process.env.AWS_REGION
+
 const fs = require('fs')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
-const { uploadFile, getFile } = require('../s3')
+const { uploadFile, getFile, deleteFile } = require('../s3')
 
 // @desc Get Gallerys
 // @route GET /api/admin/gallery
@@ -76,6 +81,11 @@ const deleteGallery = asyncHandler(async(req,res) => {
         res.status(400)
         throw new Error('file not found')
     }
+
+    const imageUrl = gallery.imageUrl;
+    const objectKey = imageUrl.split(`https://${bucketName}.s3.${region}.amazonaws.com/`)[1];  
+
+    await deleteFile(objectKey)
 
     await gallery.remove()
 

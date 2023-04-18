@@ -1,10 +1,15 @@
 const asyncHandler = require('express-async-handler')
 const Institution = require('../models/institutionModel')
 
+require('dotenv').config()
+
+const bucketName = process.env.AWS_BUCKET_NAME
+const region = process.env.AWS_REGION
+
 const fs = require('fs')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
-const { uploadFile, getFile } = require('../s3')
+const { uploadFile, getFile, deleteFile } = require('../s3')
 
 // @desc Get Institutions
 // @route GET /api/admin/institution
@@ -80,6 +85,11 @@ const deleteInstitution = asyncHandler(async(req,res) => {
         res.status(400)
         throw new Error('Institution not found')
     }
+
+    const imageUrl = institution.imageUrl;
+    const objectKey = imageUrl.split(`https://${bucketName}.s3.${region}.amazonaws.com/`)[1];  
+
+    await deleteFile(objectKey)
 
     await institution.remove()
 
