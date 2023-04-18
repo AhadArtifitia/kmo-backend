@@ -1,10 +1,15 @@
 const asyncHandler = require("express-async-handler");
 const Alumni = require('../models/alumniModel')
 
+require('dotenv').config()
+
+const bucketName = process.env.AWS_BUCKET_NAME
+const region = process.env.AWS_REGION
+
 const fs = require('fs')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
-const { uploadFile, getFile } = require('../s3')
+const { uploadFile, getFile, deleteFile } = require('../s3')
 
 //@desc Get banners
 //@route GET /api/admin/banner
@@ -72,16 +77,20 @@ const updateAlumni = asyncHandler(async(req,res) => {
 // @access private
 const deleteAlumni = asyncHandler(async(req,res) => {
     const alumni = await Alumni.findById(req.params.id)
-
+    
     if(!alumni) {
         res.status(400)
         throw new Error('Alumni not found')
     }
 
+    const imageUrl = alumni.imageUrl;
+    const objectKey = imageUrl.split(`https://${bucketName}.s3.${region}.amazonaws.com/`)[1];  
+
+    await deleteFile(objectKey)
+    
     await alumni.remove()
 
-
-    res.status(200).json({ id : req.params.id})
+    res.status(200).json({ id : req.params.id })
 })
 
 module.exports = {

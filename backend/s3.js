@@ -1,5 +1,6 @@
 require('dotenv').config()
 const S3 = require("aws-sdk/clients/s3")
+const { S3Client, DeleteObjectCommand} = require('@aws-sdk/client-s3')
 const fs = require('fs')
 require("aws-sdk/lib/maintenance_mode_message").suppress = true;
 
@@ -13,6 +14,14 @@ const s3 = new S3({
     accessKeyId,
     secretAccessKey
 })
+
+const s3Client = new S3Client({
+    region,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+  });
 
 //upload function
 function uploadFile(file) {
@@ -34,4 +43,13 @@ function getFile(key) {
     return s3.getObject(downloadParams).createReadStream()
 }
 
-module.exports = { uploadFile, getFile }
+//delete function
+function deleteFile(fileName) {
+    const deleteParams = {
+      Bucket: bucketName,
+      Key: fileName, 
+    };
+    return s3Client.send(new DeleteObjectCommand(deleteParams));
+};
+
+module.exports = { uploadFile, getFile, deleteFile }
