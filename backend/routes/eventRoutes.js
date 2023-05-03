@@ -11,7 +11,7 @@ router.post('/event', protect, upload.single("image"), setEvent)
 
 router.get('/event/:id', protect, getEvent)
 
-router.put('/event/:id', protect, updateEvent)
+router.put('/event/:id', protect, upload.single("image"), updateEvent)
 
 router.delete('/event/:id', protect, deleteEvent)
 

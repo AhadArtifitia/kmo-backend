@@ -71,7 +71,23 @@ const updateEvent = asyncHandler(async(req,res) => {
         throw new Error('Event not found')
     }
 
-    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    let result;
+    const newImage = req.file
+    if(newImage) {
+        //delete old image
+        const imageUrl = event.imageUrl;
+        const objectKey = imageUrl.split(`https://${bucketName}.s3.${region}.amazonaws.com/`)[1];  
+        await deleteFile(objectKey)
+        
+        //add new image
+        const file = req.file
+        result = await uploadFile(file)
+
+        const updatedEvent = await Event.findByIdAndUpdate(req.params.id, { $set: { title: req.body.title, organizer: req.body.organizer, type: req.body.type, category: req.body.category, description: req.body.description, location: req.body.location, datetime: req.body.datetime, imageUrl: result.Location,} }, { new: true })
+    }
+
+    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, { $set: { title: req.body.title, organizer: req.body.organizer, type: req.body.type, category: req.body.category, description: req.body.description, location: req.body.location, datetime: req.body.datetime,} }, { new: true })
+    // const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true })
 
     res.status(200).json(updatedEvent)
 })
