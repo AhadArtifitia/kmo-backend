@@ -67,7 +67,23 @@ const updateAlumni = asyncHandler(async(req,res) => {
         throw new Error('Alumni not found')
     }
 
-    const updatedAlumni = await Alumni.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    let result;
+    const newImage = req.file
+    if(newImage) {
+        //delete old image
+        const imageUrl = alumni.imageUrl;
+        const objectKey = imageUrl.split(`https://${bucketName}.s3.${region}.amazonaws.com/`)[1];  
+        await deleteFile(objectKey)
+        
+        //add new image
+        const file = req.file
+        result = await uploadFile(file)
+
+        const updatedAlumni = await Alumni.findByIdAndUpdate(req.params.id, { $set: { name: req.body.name, description: req.body.description, imageUrl: result.Location,} }, { new: true })
+    }
+
+    const updatedAlumni = await Alumni.findByIdAndUpdate(req.params.id, { $set: { name: req.body.name, description: req.body.description, } }, { new: true })
+    //const updatedAlumni = await Alumni.findByIdAndUpdate(req.params.id, req.body, { new: true })
 
     res.status(200).json(updatedAlumni)
 })

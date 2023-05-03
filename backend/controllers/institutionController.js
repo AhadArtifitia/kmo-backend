@@ -70,7 +70,22 @@ const updateInstitution = asyncHandler(async(req,res) => {
         throw new Error('Institution not found')
     }
 
-    const updatedInstitution = await Institution.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    let result;
+    const newImage = req.file
+    if(newImage) {
+        //delete old image
+        const imageUrl = institution.imageUrl;
+        const objectKey = imageUrl.split(`https://${bucketName}.s3.${region}.amazonaws.com/`)[1];  
+        await deleteFile(objectKey)
+        
+        //add new image
+        const file = req.file
+        result = await uploadFile(file)
+
+        const updatedInstitution = await Institution.findByIdAndUpdate(req.params.id, { $set: { name: req.body.name, description: req.body.description, phone: req.body.phone, email: req.body.email, location: req.body.location, imageUrl: result.Location,} }, { new: true })
+    }
+
+    const updatedInstitution = await Institution.findByIdAndUpdate(req.params.id, { $set: {name: req.body.name, description: req.body.description, phone: req.body.phone, email: req.body.email, location: req.body.location,} }, { new: true })
 
     res.status(200).json(updatedInstitution)
 })

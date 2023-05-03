@@ -11,7 +11,7 @@ router.post('/alumni', protect, upload.single("image"), setAlumni)
 
 router.get('/alumni/:id', protect, getAlumni)
 
-router.put('/alumni/:id', protect, updateAlumni)
+router.put('/alumni/:id', protect, upload.single("image"), updateAlumni)
 
 router.delete('/alumni/:id', protect, deleteAlumni)
 
